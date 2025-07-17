@@ -12,6 +12,8 @@ This plugin provides a flexible way to upload natively files to various servers,
 
 Can be used in combination with the [Capacitor Camera preview](https://github.com/Cap-go/camera-preview) To upload file in reliable manner instead of reading them in buffer of webview and then upload in JS.
 
+**Important for S3 uploads:** The plugin automatically ensures that the file field is placed last in the multipart form data, which is required by AWS S3 for presigned URL uploads with form fields.
+
 ## Install
 
 ```bash
@@ -64,8 +66,9 @@ async function uploadToS3(filePath: string, presignedUrl: string, fields: Record
     console.error('Failed to start upload:', error);
   }
 }
-
 ```
+
+**Note:** For S3 uploads, the plugin automatically ensures that the file field is placed last in the multipart form data, which is required by AWS S3 for presigned URL uploads with form fields.
 
 ### Exemple upload to a custom server:
 

@@ -69,19 +69,20 @@ public class Uploader {
         .setNotificationConfig((ctx, uploadId) -> notificationConfig)
         .setMaxRetries(maxRetries);
 
-      request.addFileToUpload(
-        filePath,
-        fileField,
-        getFileNameFromUri(Uri.parse(filePath)),
-        mimeType
-      );
-
       for (Map.Entry<String, String> entry : headers.entrySet()) {
         request.addHeader(entry.getKey(), entry.getValue());
       }
       for (Map.Entry<String, String> entry : parameters.entrySet()) {
         request.addParameter(entry.getKey(), entry.getValue());
       }
+
+      // Add file last - this is required for S3 uploads
+      request.addFileToUpload(
+        filePath,
+        fileField,
+        getFileNameFromUri(Uri.parse(filePath)),
+        mimeType
+      );
 
       return request.startUpload();
     } else {

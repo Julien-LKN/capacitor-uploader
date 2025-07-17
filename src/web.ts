@@ -42,6 +42,7 @@ export class UploaderWeb extends WebPlugin implements UploaderPlugin {
       headers = {},
       method = "POST",
       parameters = {},
+      fileField = "file",
     } = options;
     const upload = this.uploads.get(id);
 
@@ -52,11 +53,14 @@ export class UploaderWeb extends WebPlugin implements UploaderPlugin {
       if (!file) throw new Error("File not found");
 
       const formData = new FormData();
-      formData.append("file", file);
-
+      
+      // Add parameters first
       for (const [key, value] of Object.entries(parameters)) {
         formData.append(key, value);
       }
+      
+      // Add file last - this is required for S3 uploads
+      formData.append(fileField, file);
 
       const response = await fetch(serverUrl, {
         method,

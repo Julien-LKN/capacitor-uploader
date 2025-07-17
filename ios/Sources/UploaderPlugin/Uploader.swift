@@ -43,8 +43,9 @@ import MobileCoreServices
             request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
 
             let parameters = options["parameters"] as? [String: String] ?? [:]
+            let fileField = options["fileField"] as? String ?? "file"
 
-            let dataBody = createDataBody(withParameters: parameters, filePath: filePath, mimeType: mimeType, boundary: boundary)
+            let dataBody = createDataBody(withParameters: parameters, filePath: filePath, mimeType: mimeType, boundary: boundary, fileField: fileField)
 
             task = self.getUrlSession().uploadTask(with: request, from: dataBody)
         }
@@ -133,7 +134,7 @@ import MobileCoreServices
         eventHandler?(event)
     }
 
-    private func createDataBody(withParameters params: [String: String], filePath: String, mimeType: String, boundary: String) -> Data {
+    private func createDataBody(withParameters params: [String: String], filePath: String, mimeType: String, boundary: String, fileField: String) -> Data {
         let data = NSMutableData()
 
         for (key, value) in params {
@@ -143,7 +144,7 @@ import MobileCoreServices
         }
 
         data.append("--\(boundary)\r\n".data(using: .utf8)!)
-        data.append("Content-Disposition: form-data; name=\"file\"; filename=\"\(URL(fileURLWithPath: filePath).lastPathComponent)\"\r\n".data(using: .utf8)!)
+        data.append("Content-Disposition: form-data; name=\"\(fileField)\"; filename=\"\(URL(fileURLWithPath: filePath).lastPathComponent)\"\r\n".data(using: .utf8)!)
         data.append("Content-Type: \(mimeType)\r\n\r\n".data(using: .utf8)!)
         data.append(try! Data(contentsOf: URL(fileURLWithPath: filePath)))
         data.append("\r\n".data(using: .utf8)!)

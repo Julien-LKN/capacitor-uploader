@@ -28,7 +28,8 @@ public class UploaderPlugin: CAPPlugin, CAPBridgedPlugin {
             "headers": call.getObject("headers") as Any,
             "method": call.getString("method") as Any,
             "mimeType": call.getString("mimeType") as Any,
-            "parameters": call.getObject("parameters") as Any
+            "parameters": call.getObject("parameters") as Any,
+            "fileField": call.getString("fileField") as Any
         ]
 
         let maxRetries = call.getInt("maxRetries") ?? 3
